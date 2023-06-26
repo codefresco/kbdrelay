@@ -2,6 +2,7 @@ import queue
 
 import pygame
 import pygame_gui
+from client.hidreport import *
 
 
 def gui(stateQueue, eventQueue, logQueue):
@@ -17,12 +18,12 @@ def gui(stateQueue, eventQueue, logQueue):
 
     # Connection url
     urlBox = pygame_gui.elements.UITextEntryLine(
-        relative_rect=pygame.Rect((175, 150), (575, 50)), initial_text='raspberrypi.local:65432', manager=manager)
+        relative_rect=pygame.Rect((175, 150), (575, 50)), initial_text='zero.local:65432', manager=manager)
 
     # Connect button
     connectButton = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(
         (50, 150), (125, 50)), text='Connect', manager=manager)
-    is_connected = False
+    isConnected = False
 
     # Log area
     logBox = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect(
@@ -41,7 +42,8 @@ def gui(stateQueue, eventQueue, logQueue):
     running = True
     clock = pygame.time.Clock()
 
-    keys_down = []
+    keysDown = []
+    dirtyFlag = False
 
     # Output the log in textbox
     def log(logArea, logHtml):
@@ -51,13 +53,13 @@ def gui(stateQueue, eventQueue, logQueue):
             logArea.scroll_bar.set_scroll_from_start_percentage(1.0)
 
     while running:
-        time_delta = clock.tick(60)/1000.0
+        timeDelta = clock.tick(60)/1000.0
         screen.fill((0, 0, 0))
 
         # Receive connection state
         try:
-            is_connected = stateQueue.get(0)
-            if is_connected:
+            isConnected = stateQueue.get(0)
+            if isConnected:
                 connectButton.set_text('Disconnect')
             else:
                 connectButton.set_text('Connect')
@@ -76,16 +78,22 @@ def gui(stateQueue, eventQueue, logQueue):
             if event.type == pygame.QUIT:
                 running = False
 
-            elif event.type == pygame.KEYDOWN:
-                keys_down.append(pygame.key.name(event.key))
+            elif event.type == pygame.KEYDOWN and not urlBox.is_focused:
+                keysDown.append(pygame.key.name(event.key))
+                dirtyFlag = True
 
-            elif event.type == pygame.KEYUP:
-                keys_down.remove(pygame.key.name(event.key))
+            elif event.type == pygame.KEYUP and not urlBox.is_focused:
+                keysDown.remove(pygame.key.name(event.key))
+                dirtyFlag = True
+
+            if dirtyFlag and isConnected:
+                eventQueue.put({'cmd': 'send', 'data': hidReport(keysDown)})
+                dirtyFlag = False
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == connectButton:
                     connectButton.disable()
-                    if not is_connected:
+                    if not isConnected:
                         print(urlBox.get_text())
                         eventQueue.put(
                             {'cmd': 'connect', 'data': urlBox.get_text()})
@@ -105,7 +113,7 @@ def gui(stateQueue, eventQueue, logQueue):
 
         # Write active keys
         activeKeys = font.render(
-            f'{keys_down}', True, pygame.Color('#9fef00'))
+            f'{keysDown}', True, pygame.Color('#9fef00'))
 
         # Active keys frame
         screen.blit(displayBoxLabel,
@@ -113,7 +121,7 @@ def gui(stateQueue, eventQueue, logQueue):
         screen.blit(activeKeys, ((WIDTH - activeKeys.get_size()
                     [0])/2, displayBox.top + (displayBox.height - activeKeys.get_size()[1]) / 2))
 
-        manager.update(time_delta)
+        manager.update(timeDelta)
         manager.draw_ui(screen)
 
         pygame.display.flip()

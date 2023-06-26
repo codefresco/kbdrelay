@@ -22,5 +22,5 @@ guiThread.start()
 netThread.start()
 
 guiThread.join()
-eventQueue.put(None)
+eventQueue.put('exit')
 netThread.join()
