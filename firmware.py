@@ -105,8 +105,6 @@ def start():
         s.bind((HOST, PORT))
         s.listen()
         conn, addr = s.accept()
-        # data = conn.recv(16)
-        # conn.sendall(data)
         data = []
         with conn:
             print(f"Connected by {addr}")
