@@ -28,6 +28,6 @@ Connect the pi zero to the receiving machine, it will be recognised as a `Generi
 ### Client
 Run the `sender.py` on the client machine (python 3.9+), enter an `address:port` for the HID device and connect. Any keystroke on the client window happens on the receiving machine.
 
-![alt text](https://raw.githubusercontent.com/codefresco//kbdrelay/main/assets/shot.png)
+![alt text](https://raw.githubusercontent.com/codefresco/kbdrelay/main/assets/shot.png)
 
 
