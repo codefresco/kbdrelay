@@ -18,7 +18,7 @@ There is a client and a firmware.
   - The client runs on the sending machine (ie. a laptop) and can connect and send keystrokes to the HID device which would then enter them into the receiving machine as if it was a normal keyboard.
 
 ### Firmware
-Create a raspberry pi zero headless image with Wifi connection and run `firmware.py` on it. The easiest way is to set it as a systemd service so it runs automatically on boot-up. This way, you would not need to ssh into the rpi each time to run the receiver code.
+Create a raspberry pi zero headless image with Wifi connection and run `firmware.py` on it. First run, it will add to kernel modules and reboot the device. The easiest way is to set it as a systemd service so it runs automatically on boot-up. This way, you would not need to ssh into the rpi each time to run the receiver code.
 
 Connect the pi zero to the receiving machine via USB port, and it will be recognised as a `Generic HID keyboard`. Keep in mind this would not show anything on the machine, and it just silently happens, so if nothing happened after connecting, it does not necessarily mean it did not work.
 
