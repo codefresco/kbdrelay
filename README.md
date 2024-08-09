@@ -7,9 +7,7 @@ Relay keyboard events to an HID device over the network. This tool connects to a
 
 This software is provided for educational purposes and legitimate use cases only. It is the responsibility of the end user to comply with all applicable laws, regulations, and ethical guidelines when using this software. 
 
-The authors, contributors, or any associated parties of this project are not responsible for any illegal actions taken by those who choose to use this software. Use of this software for malicious activities, such as hacking, unauthorized access, damage, or theft of data, is strictly prohibited and not the intent of this project. 
-
-By choosing to use this software, you acknowledge that you understand and agree to these terms, and that any unlawful use of this software will be solely at your own risk. Any actions and or activities related to the material contained within this software is solely your responsibility. Misuse of the information in this software can result in criminal charges brought against the persons in question. 
+If you use it to do dodgy stuff it's all on you.
 
 ## How it works
 
